@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ success: false, message: "Method not allowed." });
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const { game, quantity, amount, timeSlot, screenshot, competitors } = req.body;
 
     if (!game || !quantity || !amount || !timeSlot || !screenshot || !competitors) {
-        return res.status(400).json({ success: false, message: "Missing vital registration data fields." });
+        return res.status(400).json({ success: false, message: "Missing metadata fields." });
     }
 
     const transporter = nodemailer.createTransport({
@@ -25,18 +25,10 @@ export default async function handler(req, res) {
 
     const cleanBase64Data = screenshot.split(';base64,').pop();
 
-    // ENCRYPTION PASS: Package all user data into a compact text block so it survives forever in the link
-    const securePayload = {
-        game,
-        quantity,
-        amount,
-        timeSlot,
-        competitors
-    };
-    const stringifiedData = JSON.stringify(securePayload);
-    const encryptedToken = Buffer.from(stringifiedData).toString('base64');
+    // Package all essential user data safely so it travels directly inside the URL string
+    const securePayload = { game, quantity, amount, timeSlot, competitors };
+    const encryptedToken = Buffer.from(JSON.stringify(securePayload)).toString('base64');
 
-    // Generate permanent action links that DO NOT rely on server memory
     const currentDomain = req.headers.host ? `https://${req.headers.host}` : 'https://cyber-clash-v2.vercel.app';
     const approveActionRoute = `${currentDomain}/api/approve?action=approve&token=${encryptedToken}`;
     const rejectActionRoute = `${currentDomain}/api/approve?action=reject`;
@@ -54,9 +46,9 @@ export default async function handler(req, res) {
         }
 
         const adminVerificationHTML = `
-        <div style="background: #0f172a; color: #e2e8f0; font-family: sans-serif; max-width: 650px; margin: 0 auto; border: 2px solid #38BDF8; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+        <div style="background: #0f172a; color: #e2e8f0; font-family: sans-serif; max-width: 650px; margin: 0 auto; border: 2px solid #38BDF8; border-radius: 12px; padding: 25px;">
             <h2 style="color: #38BDF8; margin-top: 0; text-transform: uppercase; border-bottom: 2px solid #1e293b; padding-bottom: 10px;">🔍 VERIFICATION REQUEST</h2>
-            <p>Review this user's payment voucher file attachment against your Zindagi account balance, then choose an action:</p>
+            <p>Review this payment voucher attachment image against your Zindagi account balance:</p>
             
             <div style="background: #020617; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #FBBF24;">
                 <p style="margin: 4px 0;"><strong>Game Bracket:</strong> ${game}</p>
@@ -64,7 +56,7 @@ export default async function handler(req, res) {
                 <p style="margin: 4px 0; font-size:16px;"><strong>Amount Claimed:</strong> <span style="color:#10B981; font-weight:bold;">Rs. ${amount.toLocaleString()}</span></p>
             </div>
 
-            <h3 style="color: #94a3b8; font-size: 14px; text-transform: uppercase;">📋 Intended Combatant Roster</h3>
+            <h3 style="color: #94a3b8; font-size: 14px; text-transform: uppercase;">📋 Roster List</h3>
             <table style="width: 100%; border-collapse: collapse; font-size: 13px; background: #020617; text-align: left; margin-bottom:30px;">
                 <thead>
                     <tr style="background: #1e293b; color: #94a3b8;">
@@ -92,10 +84,9 @@ export default async function handler(req, res) {
         };
 
         await transporter.sendMail(adminEmailPayload);
-
         return res.status(200).json({ success: true, message: "Application filed securely." });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ success: false, message: "Internal server registry logging fault." });
+        return res.status(500).json({ success: false, message: "Internal server registry error." });
     }
 }
