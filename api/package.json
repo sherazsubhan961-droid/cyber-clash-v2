@@ -1,7 +1,0 @@
-{
-  "name": "cyber-clash-v2",
-  "version": "1.0.0",
-  "dependencies": {
-    "nodemailer": "^6.9.0"
-  }
-}
