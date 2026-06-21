@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         return res.status(200).send(`
             <div style="font-family:sans-serif; text-align:center; padding:50px; background:#0f172a; color:#fff; height:100vh; margin:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
                 <h1 style="color:#F43F5E; font-size:36px; margin-bottom:10px;">🚨 Registration Rejected</h1>
-                <p style="color:#94a3b8; font-size:18px; margin:0;">You denied this order request. No ticket assets were issued to the fields.</p>
+                <p style="color:#94a3b8; font-size:18px;">You denied this order request. No ticket assets were issued.</p>
             </div>
         `);
     }
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
         }
 
         try {
-            // DECODING PASS: Extract user details directly from the link structure cleanly
+            // DECODE PASSTHROUGH: Extract the player data instantly from the URL
             const decodedString = Buffer.from(token, 'base64').toString('utf-8');
             const registrationData = JSON.parse(decodedString);
 
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
                 }
             });
 
-            // Loop through and send out the individual verified premium passes
+            // Fire custom tickets directly out to each competitor's real inbox
             for (let i = 0; i < competitors.length; i++) {
                 const currentCompetitor = competitors[i];
                 const passSecurityToken = `CC-2026-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -98,12 +98,12 @@ export default async function handler(req, res) {
             return res.status(200).send(`
                 <div style="font-family:sans-serif; text-align:center; padding:50px; background:#0f172a; color:#fff; height:100vh; margin:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
                     <h1 style="color:#10B981; font-size:36px; margin-bottom:10px;">✅ Verification Successful!</h1>
-                    <p style="color:#94a3b8; font-size:18px; margin:0;">All tickets have been safely generated and sent out to the competitors' email addresses.</p>
+                    <p style="color:#94a3b8; font-size:18px;">All tickets have been safely generated and sent out to the competitors' email addresses.</p>
                 </div>
             `);
         } catch (error) {
             console.error(error);
-            return res.status(500).send("Error decoding tracking sequences or compiling mailing pipelines.");
+            return res.status(500).send("Error compiling mailing pipelines.");
         }
     }
 }
