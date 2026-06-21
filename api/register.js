@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     const { game, quantity, amount, timeSlot, screenshot, competitors } = req.body;
 
     if (!game || !quantity || !amount || !timeSlot || !screenshot || !competitors || !Array.isArray(competitors)) {
-        return res.status(400).json({ success: false, message: "Malformed parameters or missing combatant details." });
+        return res.status(400).json({ success: false, message: "Malformed parameters or missing structured competitor data." });
     }
 
     const transporter = nodemailer.createTransport({
@@ -31,10 +31,22 @@ export default async function handler(req, res) {
     const cleanBase64Data = screenshot.split(';base64,').pop();
 
     try {
-        // DYNAMIC LOOPING ENGINE - Fires a distinct custom layout pass directly to each individual input email field
+        let masterRosterHTMLRows = "";
+
+        // 1. DYNAMIC LOOP ENGINE: Sends out individual high-end passes to each competitor
         for (let i = 0; i < competitors.length; i++) {
             const currentCompetitor = competitors[i];
             const passSecurityToken = `CC-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+
+            // Append player details into a text block for your master admin alert email later
+            masterRosterHTMLRows += `
+                <tr style="border-bottom: 1px solid #1e293b;">
+                    <td style="padding: 10px; color: #ffffff;"><strong>Slot #${i + 1}:</strong> ${currentCompetitor.name}</td>
+                    <td style="padding: 10px; color: #38BDF8;">${currentCompetitor.email}</td>
+                    <td style="padding: 10px; color: #FBBF24;">${currentCompetitor.phone}</td>
+                    <td style="padding: 10px; color: #F43F5E; font-weight: bold;">${passSecurityToken}</td>
+                </tr>
+            `;
 
             const premiumHTMLTicketLayout = `
             <div style="background: #030712; color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif; max-width: 560px; margin: 0 auto; border: 3px solid #38BDF8; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 35px rgba(58, 189, 248, 0.25);">
@@ -64,10 +76,6 @@ export default async function handler(req, res) {
                             <td style="padding: 10px 0; color: #E5E7EB;">The Dynasty Complex</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px 0; color: #4B5563; font-weight: bold; text-transform: uppercase;">Group Order Volume:</td>
-                            <td style="padding: 10px 0; color: #FBBF24; font-weight: bold;">${quantity} Total Allocation Pass(es)</td>
-                        </tr>
-                        <tr>
                             <td style="padding: 10px 0; color: #4B5563; font-weight: bold; text-transform: uppercase;">Escrow Paid Statement:</td>
                             <td style="padding: 10px 0; color: #FBBF24; font-weight: bold;">Rs. ${amount.toLocaleString()}</td>
                         </tr>
@@ -86,26 +94,65 @@ export default async function handler(req, res) {
             </div>
             `;
 
-            const dispatchPayload = {
+            const competitorEmailPayload = {
                 from: '"Cyber Clash Tournament Logistics" <sherazsubhan961@gmail.com>',
                 to: currentCompetitor.email,
                 subject: `💥 CHAMPIONSHIP TICKET ISSUED: Cyber Clash 2026 Pass Locked [${currentCompetitor.name}]`,
                 html: premiumHTMLTicketLayout,
-                attachments: [
-                    {
-                        filename: `payment_proof_${currentCompetitor.name.replace(/\s+/g, '_')}.png`,
-                        content: cleanBase64Data,
-                        encoding: 'base64'
-                    }
-                ]
+                attachments: [{ filename: `payment_proof_${currentCompetitor.name.replace(/\s+/g, '_')}.png`, content: cleanBase64Data, encoding: 'base64' }]
             };
 
-            await transporter.sendMail(dispatchPayload);
+            await transporter.sendMail(competitorEmailPayload);
         }
 
-        return res.status(200).json({ success: true, message: "All dynamic ticket payloads successfully routed." });
+        // 2. NEW TRANSFORMATION: Fires an instant Organizer Alert notification directly to Shiraz
+        const adminNotificationHTML = `
+        <div style="background: #0f172a; color: #e2e8f0; font-family: sans-serif; max-width: 650px; margin: 0 auto; border: 2px solid #10B981; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+            <h2 style="color: #10B981; margin-top: 0; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #1e293b; padding-bottom: 10px;">🚨 NEW REGISTRATION ALERT LOGGED</h2>
+            
+            <p style="font-size: 15px;">Hey Shiraz, a new team booking transaction has just been registered on the gateway database portal. Here are the ledger metrics:</p>
+            
+            <div style="background: #020617; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #FBBF24;">
+                <p style="margin: 4px 0;"><strong>Game Bracket:</strong> <span style="color: #38BDF8;">${game}</span></p>
+                <p style="margin: 4px 0;"><strong>Time Window:</strong> ${timeSlot}</p>
+                <p style="margin: 4px 0;"><strong>Passes Claimed:</strong> ${quantity} seat(s) total</p>
+                <p style="margin: 4px 0; font-size: 16px;"><strong>Total Amount Paid:</strong> <span style="color: #10B981; font-weight: bold;">Rs. ${amount.toLocaleString()}</span></p>
+            </div>
+
+            <h3 style="color: #38BDF8; font-size: 15px; text-transform: uppercase;">📋 Registered Competitors Roster</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px; background: #020617; text-align: left;">
+                <thead>
+                    <tr style="background: #1e293b; color: #94a3b8;">
+                        <th style="padding: 10px;">Name</th>
+                        <th style="padding: 10px;">Email Address</th>
+                        <th style="padding: 10px;">WhatsApp Contact</th>
+                        <th style="padding: 10px;">Issued Token Key</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${masterRosterHTMLRows}
+                </tbody>
+            </table>
+
+            <p style="font-size: 13px; color: #64748b; margin-top: 25px; border-top: 1px solid #1e293b; padding-top: 15px; text-align: center;">
+                The user's deposited payment screenshot receipt has been bound to this message as a hard attachment file. Check it against your Zindagi application data logs to finalize draft tracking charts.
+            </p>
+        </div>
+        `;
+
+        const adminEmailPayload = {
+            from: '"Cyber Clash Gateway Radar" <sherazsubhan961@gmail.com>',
+            to: 'sherazsubhan961@gmail.com', // Sends directly to you
+            subject: `🚨 TICKET SOLD ALERT: ${quantity} Pass(es) Formed for ${game} [Rs. ${amount}]`,
+            html: adminNotificationHTML,
+            attachments: [{ filename: `user_payment_voucher_proof.png`, content: cleanBase64Data, encoding: 'base64' }]
+        };
+
+        await transporter.sendMail(adminEmailPayload);
+
+        return res.status(200).json({ success: true, message: "Contestant tickets deployed and Admin data log synced successfully." });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ success: false, message: "Internal runtime server core error." });
+        return res.status(500).json({ success: false, message: "Internal server registry logging fault." });
     }
 }
