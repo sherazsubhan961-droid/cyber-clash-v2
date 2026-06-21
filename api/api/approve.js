@@ -1,9 +1,5 @@
 const nodemailer = require('nodemailer');
 
-// Temporary in-memory holding deck to keep registration details alive until you click approve
-// Note: In serverless hosting, memory resets occasionally. For a production app with high volume, a free database is best.
-global.pendingRegistrations = global.pendingRegistrations || {};
-
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,44 +8,38 @@ export default async function handler(req, res) {
 
     if (req.method === 'OPTIONS') return res.status(200).end();
 
-    const { action, id } = req.query;
-
-    if (!id || !global.pendingRegistrations[id]) {
-        return res.status(404).send(`
-            <div style="font-family:sans-serif; text-align:center; padding:50px; background:#0f172a; color:#fff; height:100vh; margin:0;">
-                <h1 style="color:#F43F5E;">❌ Registration Session Expired or Already Processed</h1>
-                <p style="color:#94a3b8;">This approval token link is no longer valid, or the serverless instance has cycled.</p>
-            </div>
-        `);
-    }
-
-    const registrationData = global.pendingRegistrations[id];
+    const { action, token } = req.query;
 
     if (action === 'reject') {
-        delete global.pendingRegistrations[id];
         return res.status(200).send(`
-            <div style="font-family:sans-serif; text-align:center; padding:50px; background:#0f172a; color:#fff; height:100vh; margin:0;">
-                <h1 style="color:#FBBF24;">🚨 Registration Rejected</h1>
-                <p style="color:#94a3b8;">You have denied this order. No tickets were dispatched to the applicant fields.</p>
+            <div style="font-family:sans-serif; text-align:center; padding:50px; background:#0f172a; color:#fff; height:100vh; margin:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                <h1 style="color:#F43F5E; font-size:36px; margin-bottom:10px;">🚨 Registration Rejected</h1>
+                <p style="color:#94a3b8; font-size:18px; margin:0;">You denied this order request. No ticket assets were issued to the fields.</p>
             </div>
         `);
     }
 
     if (action === 'approve') {
-        const { game, quantity, amount, timeSlot, screenshot, competitors } = registrationData;
-
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'sherazsubhan961@gmail.com',
-                pass: 'iqmfwgpthgxgsoah'
-            }
-        });
-
-        const cleanBase64Data = screenshot.split(';base64,').pop();
+        if (!token) {
+            return res.status(400).send("Missing security validation tokens.");
+        }
 
         try {
-            // Loop through and send the verified ticket to every single competitor
+            // DECODING PASS: Extract user details directly from the link structure cleanly
+            const decodedString = Buffer.from(token, 'base64').toString('utf-8');
+            const registrationData = JSON.parse(decodedString);
+
+            const { game, quantity, amount, timeSlot, competitors } = registrationData;
+
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'sherazsubhan961@gmail.com',
+                    pass: 'iqmfwgpthgxgsoah'
+                }
+            });
+
+            // Loop through and send out the individual verified premium passes
             for (let i = 0; i < competitors.length; i++) {
                 const currentCompetitor = competitors[i];
                 const passSecurityToken = `CC-2026-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -62,7 +52,7 @@ export default async function handler(req, res) {
                     </div>
                     
                     <div style="padding: 30px; background: radial-gradient(circle at 50% 50%, #0f172a 0%, #030712 100%); line-height: 1.6;">
-                        <p style="margin: 0 0 20px 0; font-size: 15px; color: #9CA3AF; text-align: center;">Your Zindagi wallet transfer has been confirmed by management. Your tournament pass is fully active.</p>
+                        <p style="margin: 0 0 20px 0; font-size: 15px; color: #9CA3AF; text-align: center;">Your Zindagi wallet transfer has been confirmed by management. Your tournament entry pass is now fully active.</p>
                         
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 14px;">
                             <tr>
@@ -99,25 +89,21 @@ export default async function handler(req, res) {
                     from: '"Cyber Clash Tournament Logistics" <sherazsubhan961@gmail.com>',
                     to: currentCompetitor.email,
                     subject: `🎟️ OFFICIAL TICKET ISSUED: Cyber Clash 2026 Pass Active [${currentCompetitor.name}]`,
-                    html: premiumHTMLTicketLayout,
-                    attachments: [{ filename: `payment_proof_${currentCompetitor.name.replace(/\s+/g, '_')}.png`, content: cleanBase64Data, encoding: 'base64' }]
+                    html: premiumHTMLTicketLayout
                 };
 
                 await transporter.sendMail(competitorEmailPayload);
             }
 
-            // Remove from holding deck after success
-            delete global.pendingRegistrations[id];
-
             return res.status(200).send(`
-                <div style="font-family:sans-serif; text-align:center; padding:50px; background:#0f172a; color:#fff; height:100vh; margin:0;">
-                    <h1 style="color:#10B981;">✅ Verification Successful!</h1>
-                    <p style="color:#94a3b8;">All tickets have been safely generated and sent out to the competitors' email addresses.</p>
+                <div style="font-family:sans-serif; text-align:center; padding:50px; background:#0f172a; color:#fff; height:100vh; margin:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <h1 style="color:#10B981; font-size:36px; margin-bottom:10px;">✅ Verification Successful!</h1>
+                    <p style="color:#94a3b8; font-size:18px; margin:0;">All tickets have been safely generated and sent out to the competitors' email addresses.</p>
                 </div>
             `);
         } catch (error) {
             console.error(error);
-            return res.status(500).send("Error compiling ticket pipelines.");
+            return res.status(500).send("Error decoding tracking sequences or compiling mailing pipelines.");
         }
     }
 }
