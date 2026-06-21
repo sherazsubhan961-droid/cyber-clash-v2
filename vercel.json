@@ -1,17 +1,16 @@
 {
     "version": 2,
-    "functions": {
-        "api/register.js": {
-            "maxDuration": 10
-        }
-    },
     "rewrites": [
         {
             "source": "/api/register",
             "destination": "/api/register.js"
         },
         {
-            "source": "/(.*)",
+            "source": "/api/approve",
+            "destination": "/api/approve.js"
+        },
+        {
+            "source": "/((?!api/).*)",
             "destination": "/index.html"
         }
     ]
