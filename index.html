@@ -1,4 +1,84 @@
-<!DOCTYPE html>
+<div class="logo-wrapper">
+    <h1 class="cyber-logo" data-text="CYBER CLASH 2026">CYBER CLASH 2026</h1>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
+
+.logo-wrapper {
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cyber-logo {
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 52px !important;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    color: #fff;
+    position: relative;
+    margin: 0;
+    /* Continuous Pulse Animation */
+    animation: neonGlow 2.5s ease-in-out infinite alternate;
+}
+
+/* Glitch Copy Effect layers */
+.cyber-logo::before,
+.cyber-logo::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.cyber-logo::before {
+    left: 3px;
+    text-shadow: -2px 0 #38BDF8;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitchEffect 3s infinite linear alternate-reverse;
+}
+
+.cyber-logo::after {
+    left: -3px;
+    text-shadow: -2px 0 #F43F5E, 0 2px #38BDF8;
+    clip: rect(85px, 450px, 140px, 0);
+    animation: glitchEffect 2.5s infinite linear alternate;
+}
+
+/* KEYFRAMES FOR ANIMATIONS */
+@keyframes neonGlow {
+    0% {
+        text-shadow: 0 0 10px rgba(56, 189, 248, 0.6),
+                     0 0 20px rgba(56, 189, 248, 0.4),
+                     0 0 40px rgba(56, 189, 248, 0.2);
+    }
+    100% {
+        text-shadow: 0 0 15px rgba(244, 63, 94, 0.9),
+                     0 0 30px rgba(244, 63, 94, 0.6),
+                     0 0 60px rgba(244, 63, 94, 0.3);
+        transform: scale(1.02);
+    }
+}
+
+@keyframes glitchEffect {
+    0% { clip: rect(31px, 9999px, 94px, 0); }
+    10% { clip: rect(112px, 9999px, 76px, 0); }
+    20% { clip: rect(85px, 9999px, 5px, 0); }
+    30% { clip: rect(27px, 9999px, 115px, 0); }
+    40% { clip: rect(73px, 9999px, 29px, 0); }
+    50% { clip: rect(118px, 9999px, 142px, 0); }
+    60% { clip: rect(44px, 9999px, 51px, 0); }
+    70% { clip: rect(12px, 9999px, 95px, 0); }
+    80% { clip: rect(132px, 9999px, 103px, 0); }
+    90% { clip: rect(56px, 9999px, 122px, 0); }
+    100% { clip: rect(99px, 9999px, 14px, 0); }
+}
+</style><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
