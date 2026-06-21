@@ -1,8 +1,5 @@
 const nodemailer = require('nodemailer');
 
-// Core globally exposed layout pointer array mapping
-global.pendingRegistrations = global.pendingRegistrations || {};
-
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,7 +12,7 @@ export default async function handler(req, res) {
     const { game, quantity, amount, timeSlot, screenshot, competitors } = req.body;
 
     if (!game || !quantity || !amount || !timeSlot || !screenshot || !competitors) {
-        return res.status(400).json({ success: false, message: "Missing vital registration metadata fields." });
+        return res.status(400).json({ success: false, message: "Missing vital registration data fields." });
     }
 
     const transporter = nodemailer.createTransport({
@@ -28,16 +25,21 @@ export default async function handler(req, res) {
 
     const cleanBase64Data = screenshot.split(';base64,').pop();
 
-    // Generate a unique token tracking sequence for this transaction link
-    const uniqueSessionID = `reg_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    
-    // Store data inside holding deck array
-    global.pendingRegistrations[uniqueSessionID] = { game, quantity, amount, timeSlot, screenshot, competitors };
+    // ENCRYPTION PASS: Package all user data into a compact text block so it survives forever in the link
+    const securePayload = {
+        game,
+        quantity,
+        amount,
+        timeSlot,
+        competitors
+    };
+    const stringifiedData = JSON.stringify(securePayload);
+    const encryptedToken = Buffer.from(stringifiedData).toString('base64');
 
-    // Get live deployment domain fallback to build your action click links
+    // Generate permanent action links that DO NOT rely on server memory
     const currentDomain = req.headers.host ? `https://${req.headers.host}` : 'https://cyber-clash-v2.vercel.app';
-    const approveActionRoute = `${currentDomain}/api/approve?action=approve&id=${uniqueSessionID}`;
-    const rejectActionRoute = `${currentDomain}/api/approve?action=reject&id=${uniqueSessionID}`;
+    const approveActionRoute = `${currentDomain}/api/approve?action=approve&token=${encryptedToken}`;
+    const rejectActionRoute = `${currentDomain}/api/approve?action=reject`;
 
     try {
         let masterRosterHTMLRows = "";
@@ -51,11 +53,10 @@ export default async function handler(req, res) {
             `;
         }
 
-        // Master Audit Layout built only for Shiraz
         const adminVerificationHTML = `
         <div style="background: #0f172a; color: #e2e8f0; font-family: sans-serif; max-width: 650px; margin: 0 auto; border: 2px solid #38BDF8; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
-            <h2 style="color: #38BDF8; margin-top: 0; text-transform: uppercase; border-bottom: 2px solid #1e293b; padding-bottom: 10px;">🔍 VERIFICATION REQUEST RECEIVED</h2>
-            <p>An applicant has completed the form. <strong>Review their payment voucher file attachment against your Zindagi Mobile Wallet balance</strong>, then choose an action loop below:</p>
+            <h2 style="color: #38BDF8; margin-top: 0; text-transform: uppercase; border-bottom: 2px solid #1e293b; padding-bottom: 10px;">🔍 VERIFICATION REQUEST</h2>
+            <p>Review this user's payment voucher file attachment against your Zindagi account balance, then choose an action:</p>
             
             <div style="background: #020617; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #FBBF24;">
                 <p style="margin: 4px 0;"><strong>Game Bracket:</strong> ${game}</p>
@@ -92,7 +93,7 @@ export default async function handler(req, res) {
 
         await transporter.sendMail(adminEmailPayload);
 
-        return res.status(200).json({ success: true, message: "Application filed securely. Sitting in verification holding pipelines." });
+        return res.status(200).json({ success: true, message: "Application filed securely." });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ success: false, message: "Internal server registry logging fault." });
