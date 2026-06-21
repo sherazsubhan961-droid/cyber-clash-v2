@@ -1,4 +1,44 @@
-<div class="logo-wrapper">
+<div class="neon-banner-container">
+    <div class="animated-neon-core">COMPETITOR PORTAL ACTIVE</div>
+</div>
+
+<style>
+.neon-banner-container {
+    background: #020617;
+    border: 2px solid #38BDF8;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+/* Creating an ongoing breathing pulse animation layer */
+.animated-neon-core {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #38BDF8;
+    text-transform: uppercase;
+    animation: portalPulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes portalPulse {
+    0% {
+        color: #38BDF8;
+        text-shadow: 0 0 5px #38BDF8, 0 0 10px #38BDF8;
+        opacity: 0.7;
+    }
+    100% {
+        color: #F43F5E;
+        text-shadow: 0 0 15px #F43F5E, 0 0 25px #F43F5E;
+        opacity: 1;
+        transform: scale(1.02);
+    }
+}
+</style><div class="logo-wrapper">
     <h1 class="cyber-logo" data-text="CYBER CLASH 2026">CYBER CLASH 2026</h1>
 </div>
 
