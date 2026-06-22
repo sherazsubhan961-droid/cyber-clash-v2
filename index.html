@@ -7,6 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Stripe Elements Infrastructure Built-In -->
+    <script src="https://js.stripe.com/v3/"></script>
     
     <style>
         body { font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
@@ -16,27 +18,14 @@
             background-size: 400% 400%;
             animation: gradientMove 14s ease infinite;
         }
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .plasma-orb {
-            position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.35; mix-blend-mode: screen; pointer-events: none; animation: floatOrb 10s ease-in-out infinite alternate;
-        }
+        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .plasma-orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.35; mix-blend-mode: screen; pointer-events: none; animation: floatOrb 10s ease-in-out infinite alternate; }
         .orb-pink { width: 450px; height: 450px; background: #ec4899; top: -10%; left: -10%; }
-        .orb-blue { width: 500px; height: 500px; background: #06b6d4; bottom: -5%; right: -5%; animation-delay: -3s; }
-        .cyber-panel {
-            background: rgba(10, 10, 26, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 2px solid #38bdf8; box-shadow: 0 0 25px rgba(56, 189, 248, 0.15); position: relative;
-        }
-        .cyber-panel::before {
-            content: ''; position: absolute; top: -2px; left: -2px; width: 30px; height: 30px; border-top: 4px solid #f43f5e; border-left: 4px solid #f43f5e;
-        }
-        .cyber-panel::after {
-            content: ''; position: absolute; bottom: -2px; right: -2px; width: 30px; height: 30px; border-bottom: 4px solid #fbbf24; border-right: 4px solid #fbbf24;
-        }
+        .orb-blue { width: 500px; height: 500px; background: #06b6d4; bottom: -5%; right: -5%; }
+        .cyber-panel { background: rgba(10, 10, 26, 0.75); backdrop-filter: blur(20px); border: 2px solid #38bdf8; box-shadow: 0 0 25px rgba(56, 189, 248, 0.15); position: relative; }
+        .cyber-panel::before { content: ''; position: absolute; top: -2px; left: -2px; width: 30px; height: 30px; border-top: 4px solid #f43f5e; border-left: 4px solid #f43f5e; }
+        .cyber-panel::after { content: ''; position: absolute; bottom: -2px; right: -2px; width: 30px; height: 30px; border-bottom: 4px solid #fbbf24; border-right: 4px solid #fbbf24; }
         .neon-text-blue { text-shadow: 0 0 12px rgba(56, 189, 248, 0.7); }
-        .neon-border-focus:focus { outline: none; border-color: #f43f5e; box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
     </style>
 </head>
 <body class="animated-bg text-gray-100 min-h-screen relative pb-16">
@@ -53,17 +42,19 @@
                 CYBER CLASH 2026
             </h1>
             <p class="text-gray-400 text-lg md:text-xl tracking-wide max-w-xl mx-auto mt-2">
-                Managed by <span class="text-amber-400 font-bold">K.M. Subhan Shiraz</span> & <span class="text-cyan-400 font-bold">Mian M. Taimur Usman</span>
+                Co-Founded & Managed by <span class="text-amber-400 font-bold">K.M. Subhan Shiraz</span> & <span class="text-cyan-400 font-bold">Mian M. Taimur Usman</span>
             </p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- MAIN REGISTRATION PANEL -->
             <main class="lg:col-span-7">
                 <form id="registrationForm" class="cyber-panel p-6 rounded-2xl space-y-6">
                     <h2 class="heading-font text-2xl font-black text-cyan-400 uppercase tracking-wider border-b border-cyan-500/20 pb-2 neon-text-blue">
                         🎮 SECURE REGISTRY NODE
                     </h2>
 
+                    <!-- CHOOSE GAME -->
                     <div>
                         <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Target Arena Game Category</label>
                         <select id="gameSelect" onchange="toggleTicketCounter()" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-4 py-3 text-white font-semibold cursor-pointer">
@@ -73,6 +64,7 @@
                         </select>
                     </div>
 
+                    <!-- PASS QUANTITY DROP-DOWN (1-10) -->
                     <div id="ticketCountWrapper">
                         <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Number of Passes to Purchase</label>
                         <select id="ticketCountSelect" onchange="adjustRosterInputs()" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-4 py-3 text-white font-semibold cursor-pointer">
@@ -85,48 +77,51 @@
                             <option value="7">7 Tickets</option>
                             <option value="8">8 Tickets</option>
                             <option value="9">9 Tickets</option>
-                            <option value="10">10 Tickets (Maximum Limit)</option>
+                            <option value="10">10 Tickets (Maximum Limit Batch)</option>
                         </select>
                     </div>
 
+                    <!-- CHOOSE PAYMENT METHOD -->
                     <div>
-                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Select Your Mobile Account/Wallet</label>
-                        <select id="paymentMethodSelect" onchange="updatePaymentDetails()" class="w-full bg-slate-950/90 border border-amber-500/40 rounded-xl px-4 py-3 text-white font-semibold cursor-pointer">
-                            <option value="Zindagi">Zindagi App Account (Fast Payout)</option>
-                            <option value="JazzCash">JazzCash Wallet</option>
+                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Preferred Gateway Payment Method</label>
+                        <select id="paymentMethodSelect" onchange="updatePaymentDetailsVisibility()" class="w-full bg-slate-950/90 border border-amber-500/40 rounded-xl px-4 py-3 text-white font-semibold cursor-pointer">
+                            <option value="Card">Visa / Mastercard (Credit/Debit Card)</option>
+                            <option value="Zindagi">Zindagi App Account Transfer</option>
+                            <option value="JazzCash">JazzCash Mobile Wallet</option>
                             <option value="Easypaisa">Easypaisa Mobile Wallet</option>
                         </select>
                     </div>
 
+                    <!-- PASS CAPACITY INVOICE PARAMETERS -->
                     <div class="grid grid-cols-2 gap-4 bg-slate-950/80 border border-slate-800 p-4 rounded-xl">
                         <div>
                             <span class="block text-xs text-gray-500 uppercase font-bold tracking-wider">Pass Capacity</span>
                             <span id="displayQuantity" class="text-2xl font-black heading-font text-white">1 Seat</span>
                         </div>
                         <div class="text-right">
-                            <span class="block text-xs text-gray-500 uppercase font-bold tracking-wider">Required Deposit</span>
+                            <span class="block text-xs text-gray-500 uppercase font-bold tracking-wider">Required Wallet Deposit</span>
                             <span id="displayAmount" class="text-2xl font-black heading-font text-amber-400">Rs. 2,000</span>
                         </div>
                     </div>
 
+                    <!-- DYNAMIC PLAYER INPUT FIELDS -->
                     <div id="combatantContainer" class="space-y-4"></div>
 
-                    <div class="bg-gradient-to-r from-purple-950/40 to-slate-950 border border-purple-500/30 p-4 rounded-xl space-y-2">
-                        <h4 class="heading-font font-black text-purple-400 uppercase text-sm tracking-wider">Send Funds to This Account:</h4>
-                        <div class="bg-black/60 px-3 py-3 rounded-lg border border-slate-800 space-y-1">
-                            <div class="flex justify-between items-center">
-                                <span id="methodLabelName" class="text-xs text-gray-400 uppercase font-bold">Zindagi App Transfer</span>
-                                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Active</span>
-                            </div>
-                            <div class="text-white font-black tracking-wider text-xl">0323 4636 920</div>
-                            <div class="text-xs text-amber-400 font-bold">Account Title Name: Khwaja M. Subhan</div>
+                    <!-- MOBILE TRANSFER METHOD DETAILS DECK -->
+                    <div id="mobileWalletDetailsBox" class="bg-gradient-to-r from-purple-950/40 to-slate-950 border border-purple-500/30 p-4 rounded-xl space-y-2 hidden">
+                        <h4 class="heading-font font-black text-purple-400 uppercase text-sm tracking-wider">Core Escrow Deposit Line</h4>
+                        <div class="bg-black/60 px-3 py-3 rounded-lg border border-slate-800">
+                            <span id="walletLabelName" class="block text-[10px] text-gray-500 uppercase font-bold">Transfer Line</span>
+                            <span class="text-white font-black tracking-wider text-lg block">0323 4636 920</span>
+                            <span class="text-xs text-amber-400 block mt-1">Account Title: Khwaja M. Subhan</span>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Upload Transfer Screenshot (Proof)</label>
+                    <!-- PROOF DEPOSIT SCREENSHOT NODE -->
+                    <div id="screenshotUploadWrapper" class="hidden">
+                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Upload Transfer Voucher Proof (Image File Only)</label>
                         <div class="relative bg-slate-950/90 border-2 border-dashed border-cyan-500/30 rounded-xl p-4 text-center group hover:border-cyan-400 transition-all duration-300">
-                            <input type="file" id="screenshotFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20" required />
+                            <input type="file" id="screenshotFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20" />
                             <div>
                                 <span class="block text-cyan-400 font-bold text-sm uppercase">Select Payment Image</span>
                                 <span id="fileNameDisplay" class="block text-xs text-gray-500 italic">No image file staged</span>
@@ -140,14 +135,73 @@
                 </form>
             </main>
 
+            <!-- RIGHT SIDEBAR: TOURNAMENT RULES DECK -->
             <aside class="lg:col-span-5 space-y-6">
-                <section class="cyber-panel p-5 rounded-2xl border-emerald-500/50">
+                <!-- PRIZE POOL MATRIX CARD -->
+                <section class="cyber-panel p-5 rounded-2xl border-emerald-500/50 shadow-emerald-500/5">
                     <h3 class="heading-font text-lg font-black text-emerald-400 uppercase tracking-widest border-b border-emerald-500/20 pb-2">
-                        💰 ARENA PRIZE POOLS
+                        💰 OFFICIAL ARENA PRIZE POOLS
                     </h3>
-                    <div class="mt-3 space-y-2 text-sm">
-                        <p><strong>Tekken 8 / EA Sports:</strong> Rs. 20,000 + Medals</p>
-                        <p><strong>PUBG Mobile:</strong> Rs. 30,000 Cash Pool</p>
+                    <div class="mt-3 space-y-3 font-medium">
+                        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                            <span class="block heading-font text-xs text-cyan-400 uppercase font-bold tracking-wide">🏆 TEKKEN 8 & EA SPORTS FC</span>
+                            <span class="text-xl font-black text-white">Rs. 20,000 + Winning Medals</span>
+                            <p class="text-[11px] text-gray-400 mt-1">Awarded exclusively to the 1st Position individual champion.</p>
+                        </div>
+                        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                            <span class="block heading-font text-xs text-purple-400 uppercase font-bold tracking-wide">🏆 PUBG MOBILE SQUAD POOL</span>
+                            <span class="text-xl font-black text-amber-400">Rs. 30,000 Liquid Cash</span>
+                            <p class="text-[11px] text-gray-400 mt-1">Dispatched directly to the 1st Position complete squad matrix roster.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- MANDATORY CODES OF CONDUCT PANEL -->
+                <section class="cyber-panel p-5 rounded-2xl border-rose-500/50 shadow-rose-500/5">
+                    <h3 class="heading-font text-lg font-black text-rose-500 uppercase tracking-widest border-b border-rose-500/20 pb-2">
+                        ⚠️ MANDATORY ARENA LAW & RULES
+                    </h3>
+                    <ul class="mt-3 space-y-3 text-sm text-gray-300 leading-relaxed font-medium">
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-black mt-0.5">▪</span>
+                            <span><strong>Zero Tolerance Fighting:</strong> Absolutely no physical alterations or aggressive layout postures are tolerated inside the complex boundaries.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-black mt-0.5">▪</span>
+                            <span><strong>Abusive Vocabulary Block:</strong> The use of profanity, racial slurs, or toxic trash-talk targeted at competitors or administrators is strictly banned.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-black mt-0.5">▪</span>
+                            <span><strong>Immediate Disqualification:</strong> If any combatant is logged violating these parameters, they will be **instantly disqualified** from their brackets immediately.</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- BRACKET FORMAT SPECIFIC RULES PANEL -->
+                <section class="cyber-panel p-5 rounded-2xl border-amber-500/50 shadow-amber-500/5">
+                    <h3 class="heading-font text-lg font-black text-amber-400 uppercase tracking-widest border-b border-amber-500/20 pb-2">
+                        🛡️ GAME-SPECIFIC BRACKETS
+                    </h3>
+                    <div class="mt-4 space-y-4 divide-y divide-slate-800/60">
+                        <div class="pb-3">
+                            <h4 class="heading-font text-xs font-black text-cyan-400 uppercase tracking-wider mb-1">🎮 TEKKEN 8 HARDWARE SPECS:</h4>
+                            <ul class="text-xs text-gray-400 space-y-1.5 list-inside list-disc">
+                                <li>Run via an official Double Elimination Tournament format grid structure.</li>
+                                <li>Competitors are **fully permitted** to attach and configure their personal Custom Joysticks or Arcade Controllers as per their needs.</li>
+                            </ul>
+                        </div>
+                        <div class="py-3">
+                            <h4 class="heading-font text-xs font-black text-emerald-400 uppercase tracking-wider mb-1">⚽ EA SPORTS FC (FIFA PS5):</h4>
+                            <p class="text-xs text-gray-400 leading-relaxed">
+                                Executed as a high-intensity Solo 1v1 console grid challenge. Players are authorized to map custom controller layout styles before starting their matches.
+                            </p>
+                        </div>
+                        <div class="pt-3">
+                            <h4 class="heading-font text-xs font-black text-purple-400 uppercase tracking-wider mb-1">📱 PUBG MOBILE LOGISTICS SQUAD LAYOUT:</h4>
+                            <p class="text-xs text-gray-400 leading-relaxed">
+                                Matches deployment requires a Complete 4-Man Squad Matrix operation (Rs. 1,500 per person making it Rs. 6,000 complete).
+                            </p>
+                        </div>
                     </div>
                 </section>
             </aside>
@@ -155,12 +209,26 @@
     </div>
 
     <script>
+        // Use test stripe token configuration
+        const stripe = Stripe('pk_test_51P3KxUBy7R7V7vX87hF9...'); 
         let structuredBase64Image = "";
 
-        function updatePaymentDetails() {
+        function updatePaymentDetailsVisibility() {
             const method = document.getElementById('paymentMethodSelect').value;
-            const label = document.getElementById('methodLabelName');
-            label.innerText = `${method} Account Wallet Link`;
+            const walletBox = document.getElementById('mobileWalletDetailsBox');
+            const uploadBox = document.getElementById('screenshotUploadWrapper');
+            const label = document.getElementById('walletLabelName');
+
+            if (method === "Card") {
+                walletBox.classList.add('hidden');
+                uploadBox.classList.add('hidden');
+                document.getElementById('screenshotFile').required = false;
+            } else {
+                walletBox.classList.remove('hidden');
+                uploadBox.classList.remove('hidden');
+                document.getElementById('screenshotFile').required = true;
+                label.innerText = `${method} Escrow Account`;
+            }
         }
 
         function toggleTicketCounter() {
@@ -185,11 +253,11 @@
             for (let i = 0; i < headcount; i++) {
                 container.innerHTML += `
                     <div class="bg-black/40 border border-slate-800 p-4 rounded-xl space-y-3">
-                        <span class="block heading-font text-xs font-black text-gray-400 uppercase">👤 Competitor #${i + 1}</span>
+                        <span class="block heading-font text-xs font-black text-gray-400 uppercase">👤 Competitor Roster Seat #${i + 1}</span>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <input type="text" placeholder="Full Legal Name" class="competitor-name bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" required />
+                            <input type="text" placeholder="Full Name" class="competitor-name bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" required />
                             <input type="email" placeholder="Email Address" class="competitor-email bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" required />
-                            <input type="tel" placeholder="WhatsApp Number" class="competitor-phone bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" required />
+                            <input type="tel" placeholder="WhatsApp Phone" class="competitor-phone bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white" required />
                         </div>
                     </div>`;
             }
@@ -206,13 +274,14 @@
 
         document.getElementById('registrationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (!structuredBase64Image) {
-                Swal.fire({ icon: 'warning', title: 'Missing Proof Asset', text: 'Please upload the payment proof screenshot.', background: '#0f172a', color: '#fff' });
+            
+            const method = document.getElementById('paymentMethodSelect').value;
+            if (method !== "Card" && !structuredBase64Image) {
+                Swal.fire({ icon: 'warning', title: 'Missing Voucher', text: 'Please attach your transfer proof receipt image.', background: '#0f172a', color: '#fff' });
                 return;
             }
 
             const game = document.getElementById('gameSelect').value;
-            const method = document.getElementById('paymentMethodSelect').value;
             let quantity = (game === "PUBG Mobile") ? 4 : (parseInt(document.getElementById('ticketCountSelect').value) || 1);
             let amount = (game === "PUBG Mobile") ? 6000 : (quantity * 2000);
 
@@ -229,27 +298,31 @@
                 });
             }
 
-            Swal.fire({ title: 'Transmitting Registry Logs...', text: 'Securing submission payload lines...', background: '#0f172a', color: '#fff', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            Swal.fire({ title: 'Opening Connection...', text: 'Processing node arrays...', background: '#0f172a', color: '#fff', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
             try {
-                const backendResponse = await fetch('/api/register', {
+                const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ game, quantity, amount, timeSlot: "Universal Schedule", screenshot: structuredBase64Image, competitors, method })
+                    body: JSON.stringify({ game, quantity, amount, competitors, method, screenshot: structuredBase64Image })
                 });
-                const result = await backendResponse.json();
-                if (result.success) {
-                    Swal.fire({ icon: 'success', title: 'APPLICATION ROUTED SECURELY', text: 'Your registration entry data is locked into approval staging queues!', background: '#0f172a', color: '#fff' });
+                const result = await response.json();
+
+                if (method === "Card" && result.stripeSessionId) {
+                    // Redirect seamlessly outwards to Stripe payment portal checkouts
+                    await stripe.redirectToCheckout({ sessionId: result.stripeSessionId });
+                } else if (result.success) {
+                    Swal.fire({ icon: 'success', title: 'SUCCESSFULLY TRANSMITTED', text: 'Your manual wallet deposit packet is sent to audit lines!', background: '#0f172a', color: '#fff' });
                     document.getElementById('registrationForm').reset();
                     structuredBase64Image = "";
                     toggleTicketCounter();
                 } else { throw new Error(); }
             } catch (err) {
-                Swal.fire({ icon: 'error', title: 'GATEWAY DISCONNECT', text: 'Check connection or logs panel configurations.', background: '#0f172a', color: '#fff' });
+                Swal.fire({ icon: 'error', title: 'GATEWAY DISCONNECT', text: 'Error executing transaction script sequence.', background: '#0f172a', color: '#fff' });
             }
         });
 
-        window.onload = toggleTicketCounter;
+        window.onload = () => { toggleTicketCounter(); updatePaymentDetailsVisibility(); };
     </script>
 </body>
 </html>
