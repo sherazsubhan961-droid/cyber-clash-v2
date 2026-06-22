@@ -7,8 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Stripe Elements Infrastructure Built-In -->
-    <script src="https://js.stripe.com/v3/"></script>
     
     <style>
         body { font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
@@ -81,47 +79,55 @@
                         </select>
                     </div>
 
-                    <!-- CHOOSE PAYMENT METHOD -->
+                    <!-- REVISED FIXED WALLET CONTEXT DESCRIPTION -->
                     <div>
-                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Preferred Gateway Payment Method</label>
-                        <select id="paymentMethodSelect" onchange="updatePaymentDetailsVisibility()" class="w-full bg-slate-950/90 border border-amber-500/40 rounded-xl px-4 py-3 text-white font-semibold cursor-pointer">
-                            <option value="Card">Visa / Mastercard (Credit/Debit Card)</option>
-                            <option value="Zindagi">Zindagi App Account Transfer</option>
-                            <option value="JazzCash">JazzCash Mobile Wallet</option>
-                            <option value="Easypaisa">Easypaisa Mobile Wallet</option>
-                        </select>
+                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Required Gateway Payment Method</label>
+                        <div class="w-full bg-slate-900/90 border border-purple-500/40 rounded-xl px-4 py-3 text-purple-400 font-bold">
+                            💎 Zindagi App Transfer Channel
+                        </div>
                     </div>
 
-                    <!-- PASS CAPACITY INVOICE PARAMETERS -->
+                    <!-- INVOICE PARAMETERS -->
                     <div class="grid grid-cols-2 gap-4 bg-slate-950/80 border border-slate-800 p-4 rounded-xl">
                         <div>
                             <span class="block text-xs text-gray-500 uppercase font-bold tracking-wider">Pass Capacity</span>
                             <span id="displayQuantity" class="text-2xl font-black heading-font text-white">1 Seat</span>
                         </div>
                         <div class="text-right">
-                            <span class="block text-xs text-gray-500 uppercase font-bold tracking-wider">Required Wallet Deposit</span>
+                            <span class="block text-xs text-gray-500 uppercase font-bold tracking-wider">Required Deposit Fee</span>
                             <span id="displayAmount" class="text-2xl font-black heading-font text-amber-400">Rs. 2,000</span>
+                        </div>
+                    </div>
+
+                    <!-- ESCROW TRANSMISSION INFO DETAILS DECK -->
+                    <div class="bg-gradient-to-r from-purple-950/50 to-slate-950 border border-purple-500/30 p-4 rounded-xl space-y-3">
+                        <h4 class="heading-font font-black text-purple-400 uppercase text-sm tracking-wider flex items-center gap-2">
+                            📥 OFFICIAL ZINDAGI PAYMENT PORTAL DETAILS
+                        </h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="bg-black/50 p-2 rounded border border-slate-800/80">
+                                <span class="text-xs text-gray-500 uppercase block font-bold">Account Number:</span>
+                                <span class="text-white font-mono font-black text-lg">0323 4636 920</span>
+                            </div>
+                            <div class="bg-black/50 p-2 rounded border border-slate-800/80">
+                                <span class="text-xs text-gray-500 uppercase block font-bold">Account Name Title:</span>
+                                <span class="text-amber-400 font-bold text-base">Saleem</span>
+                            </div>
+                            <div class="bg-black/50 p-2 rounded border border-slate-800/80">
+                                <span class="text-xs text-gray-500 uppercase block font-bold">International IBAN Registry String:</span>
+                                <span class="text-cyan-400 font-mono text-xs block break-all font-bold select-all">PK10JSBL9999903234636920</span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- DYNAMIC PLAYER INPUT FIELDS -->
                     <div id="combatantContainer" class="space-y-4"></div>
 
-                    <!-- MOBILE TRANSFER METHOD DETAILS DECK -->
-                    <div id="mobileWalletDetailsBox" class="bg-gradient-to-r from-purple-950/40 to-slate-950 border border-purple-500/30 p-4 rounded-xl space-y-2 hidden">
-                        <h4 class="heading-font font-black text-purple-400 uppercase text-sm tracking-wider">Core Escrow Deposit Line</h4>
-                        <div class="bg-black/60 px-3 py-3 rounded-lg border border-slate-800">
-                            <span id="walletLabelName" class="block text-[10px] text-gray-500 uppercase font-bold">Transfer Line</span>
-                            <span class="text-white font-black tracking-wider text-lg block">0323 4636 920</span>
-                            <span class="text-xs text-amber-400 block mt-1">Account Title: Khwaja M. Subhan</span>
-                        </div>
-                    </div>
-
-                    <!-- PROOF DEPOSIT SCREENSHOT NODE -->
-                    <div id="screenshotUploadWrapper" class="hidden">
-                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Upload Transfer Voucher Proof (Image File Only)</label>
+                    <!-- MANDATORY PROOF DEPOSIT SCREENSHOT NODE -->
+                    <div>
+                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Upload Zindagi Transfer Receipt Screenshot (Required)</label>
                         <div class="relative bg-slate-950/90 border-2 border-dashed border-cyan-500/30 rounded-xl p-4 text-center group hover:border-cyan-400 transition-all duration-300">
-                            <input type="file" id="screenshotFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20" />
+                            <input type="file" id="screenshotFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20" required />
                             <div>
                                 <span class="block text-cyan-400 font-bold text-sm uppercase">Select Payment Image</span>
                                 <span id="fileNameDisplay" class="block text-xs text-gray-500 italic">No image file staged</span>
@@ -209,27 +215,7 @@
     </div>
 
     <script>
-        // Use test stripe token configuration
-        const stripe = Stripe('pk_test_51P3KxUBy7R7V7vX87hF9...'); 
         let structuredBase64Image = "";
-
-        function updatePaymentDetailsVisibility() {
-            const method = document.getElementById('paymentMethodSelect').value;
-            const walletBox = document.getElementById('mobileWalletDetailsBox');
-            const uploadBox = document.getElementById('screenshotUploadWrapper');
-            const label = document.getElementById('walletLabelName');
-
-            if (method === "Card") {
-                walletBox.classList.add('hidden');
-                uploadBox.classList.add('hidden');
-                document.getElementById('screenshotFile').required = false;
-            } else {
-                walletBox.classList.remove('hidden');
-                uploadBox.classList.remove('hidden');
-                document.getElementById('screenshotFile').required = true;
-                label.innerText = `${method} Escrow Account`;
-            }
-        }
 
         function toggleTicketCounter() {
             const selectedGame = document.getElementById('gameSelect').value;
@@ -275,9 +261,8 @@
         document.getElementById('registrationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const method = document.getElementById('paymentMethodSelect').value;
-            if (method !== "Card" && !structuredBase64Image) {
-                Swal.fire({ icon: 'warning', title: 'Missing Voucher', text: 'Please attach your transfer proof receipt image.', background: '#0f172a', color: '#fff' });
+            if (!structuredBase64Image) {
+                Swal.fire({ icon: 'warning', title: 'Missing Voucher', text: 'Please attach your Zindagi transfer proof receipt image.', background: '#0f172a', color: '#fff' });
                 return;
             }
 
@@ -298,31 +283,29 @@
                 });
             }
 
-            Swal.fire({ title: 'Opening Connection...', text: 'Processing node arrays...', background: '#0f172a', color: '#fff', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            Swal.fire({ title: 'Opening Connection...', text: 'Processing receipt files...', background: '#0f172a', color: '#fff', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ game, quantity, amount, competitors, method, screenshot: structuredBase64Image })
+                    body: JSON.stringify({ game, quantity, amount, competitors, method: "Zindagi Account Transfer", screenshot: structuredBase64Image })
                 });
                 const result = await response.json();
 
-                if (method === "Card" && result.stripeSessionId) {
-                    // Redirect seamlessly outwards to Stripe payment portal checkouts
-                    await stripe.redirectToCheckout({ sessionId: result.stripeSessionId });
-                } else if (result.success) {
-                    Swal.fire({ icon: 'success', title: 'SUCCESSFULLY TRANSMITTED', text: 'Your manual wallet deposit packet is sent to audit lines!', background: '#0f172a', color: '#fff' });
+                if (result.success) {
+                    Swal.fire({ icon: 'success', title: 'SUCCESSFULLY TRANSMITTED', text: 'Your Zindagi deposit audit packet is sent to verification lines!', background: '#0f172a', color: '#fff' });
                     document.getElementById('registrationForm').reset();
                     structuredBase64Image = "";
+                    document.getElementById('fileNameDisplay').innerText = "No image file staged";
                     toggleTicketCounter();
                 } else { throw new Error(); }
             } catch (err) {
-                Swal.fire({ icon: 'error', title: 'GATEWAY DISCONNECT', text: 'Error executing transaction script sequence.', background: '#0f172a', color: '#fff' });
+                Swal.fire({ icon: 'error', title: 'GATEWAY DISCONNECT', text: 'Error executing entry network sequence.', background: '#0f172a', color: '#fff' });
             }
         });
 
-        window.onload = () => { toggleTicketCounter(); updatePaymentDetailsVisibility(); };
+        window.onload = () => { toggleTicketCounter(); };
     </script>
 </body>
 </html>
