@@ -102,10 +102,26 @@
 
                     <div>
                         <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Target Arena Game Category</label>
-                        <select id="gameSelect" onchange="adjustRosterInputs()" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-4 py-3 text-white font-semibold transition-all duration-300 neon-border-focus cursor-pointer">
+                        <select id="gameSelect" onchange="toggleTicketCounter()" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-4 py-3 text-white font-semibold transition-all duration-300 neon-border-focus cursor-pointer">
                             <option value="Tekken 8">Tekken 8 (1v1 Fighter Pro Bracket) — Rs. 2,000</option>
                             <option value="EA Sports FC">EA Sports FC (FIFA PS5 Solo Bracket) — Rs. 2,000</option>
                             <option value="PUBG Mobile">PUBG Mobile (4v4 Complete Squad Matrix) — Rs. 6,000</option>
+                        </select>
+                    </div>
+
+                    <div id="ticketCountWrapper">
+                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Number of Passes to Purchase</label>
+                        <select id="ticketCountSelect" onchange="adjustRosterInputs()" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-4 py-3 text-white font-semibold transition-all duration-300 neon-border-focus cursor-pointer">
+                            <option value="1">1 Ticket (Solo Base Node)</option>
+                            <option value="2">2 Tickets</option>
+                            <option value="3">3 Tickets</option>
+                            <option value="4">4 Tickets</option>
+                            <option value="5">5 Tickets</option>
+                            <option value="6">6 Tickets</option>
+                            <option value="7">7 Tickets</option>
+                            <option value="8">8 Tickets</option>
+                            <option value="9">9 Tickets</option>
+                            <option value="10">10 Tickets (Maximum Limit Batch)</option>
                         </select>
                     </div>
 
@@ -230,9 +246,23 @@
     <script>
         let structuredBase64Image = "";
 
+        function toggleTicketCounter() {
+            const selectedGame = document.getElementById('gameSelect').value;
+            const counterWrapper = document.getElementById('ticketCountWrapper');
+            
+            if (selectedGame === "PUBG Mobile") {
+                // PUBG requires exactly a complete 4-man squad layout setup
+                counterWrapper.style.display = "none";
+            } else {
+                counterWrapper.style.display = "block";
+            }
+            adjustRosterInputs();
+        }
+
         function adjustRosterInputs() {
             const selectedGame = document.getElementById('gameSelect').value;
             const container = document.getElementById('combatantContainer');
+            const ticketCountSelect = document.getElementById('ticketCountSelect');
             
             let headcount = 1;
             let netFeePaid = 2000;
@@ -240,6 +270,9 @@
             if (selectedGame === "PUBG Mobile") {
                 headcount = 4;
                 netFeePaid = 6000;
+            } else {
+                headcount = parseInt(ticketCountSelect.value) || 1;
+                netFeePaid = headcount * 2000;
             }
 
             document.getElementById('displayQuantity').innerText = `${headcount} Seat${headcount > 1 ? 's' : ''}`;
@@ -248,10 +281,15 @@
             container.innerHTML = ""; 
 
             for (let i = 0; i < headcount; i++) {
+                let nodeLabel = `👤 Solo Combatant Seat Node #${i + 1}`;
+                if (selectedGame === "PUBG Mobile") {
+                    nodeLabel = `👤 Squad Member #${i + 1} ${i === 0 ? '(Squad Leader / Primary Contact)' : ''}`;
+                }
+
                 container.innerHTML += `
                     <div class="bg-black/40 border border-slate-800 p-4 rounded-xl space-y-3 player-card-node">
                         <span class="block heading-font text-xs font-black text-gray-400 uppercase tracking-wider">
-                            👤 Combatant Seat Target Node #${i + 1} ${i === 0 && headcount > 1 ? '(Squad Leader / Contact Point)' : ''}
+                            ${nodeLabel}
                         </span>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <input type="text" placeholder="Full Legal Name" class="competitor-name bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white neon-border-focus" required />
@@ -291,15 +329,23 @@
             }
 
             const game = document.getElementById('gameSelect').value;
-            const timeSlot = "Universal Tournament Schedule"; // Hardcoded default time context
-            const quantity = game === "PUBG Mobile" ? 4 : 1;
-            const amount = game === "PUBG Mobile" ? 6000 : 2000;
+            const timeSlot = "Universal Tournament Schedule"; 
+            
+            let quantity = 1;
+            let amount = 2000;
+
+            if (game === "PUBG Mobile") {
+                quantity = 4;
+                amount = 6000;
+            } else {
+                quantity = parseInt(document.getElementById('ticketCountSelect').value) || 1;
+                amount = quantity * 2000;
+            }
 
             const nameElements = document.querySelectorAll('.competitor-name');
             const emailElements = document.querySelectorAll('.competitor-email');
             const phoneElements = document.querySelectorAll('.competitor-phone');
 
-            // CRITICAL BUG FIX HERE: Explicitly slice and capture only what the selected game permits
             const competitors = [];
             for (let i = 0; i < quantity; i++) {
                 if(nameElements[i]) {
@@ -341,7 +387,7 @@
                     document.getElementById('registrationForm').reset();
                     document.getElementById('fileNameDisplay').innerText = "No image file staged";
                     structuredBase64Image = "";
-                    adjustRosterInputs();
+                    toggleTicketCounter();
                 } else {
                     throw new Error("Dropped gateway entry.");
                 }
@@ -357,7 +403,7 @@
             }
         });
 
-        window.onload = adjustRosterInputs;
+        window.onload = toggleTicketCounter;
     </script>
 </body>
 </html>
