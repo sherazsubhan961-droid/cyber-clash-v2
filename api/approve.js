@@ -40,15 +40,9 @@ module.exports.handler = async (event, context) => {
                 }
             });
 
-            // CRITICAL FIX: Explicitly limit the ticket generator loop to match the real game profile headcount
-            let actualAllowedHeadcount = 1; 
-            if (game === "PUBG Mobile") {
-                actualAllowedHeadcount = 4;
-            }
-
             if (competitors && Array.isArray(competitors)) {
-                // The loop stops EXACTLY at the allowed limit, preventing duplicate ticket ghost entries
-                for (let i = 0; i < Math.min(competitors.length, actualAllowedHeadcount); i++) {
+                // Dynamically loops exactly through the exact total number of checked-out competitors sent from frontend
+                for (let i = 0; i < competitors.length; i++) {
                     const player = competitors[i];
                     const ticketKey = `CC-2026-${Math.floor(100000 + Math.random() * 900000)}`;
 
@@ -61,8 +55,8 @@ module.exports.handler = async (event, context) => {
                         <div style="padding:25px;background:#0f172a;line-height:1.6;">
                             <p style="margin:8px 0;color:#94a3b8;"><strong>Competitor Name:</strong> <span style="color:#fff;font-weight:bold;">${player.name}</span></p>
                             <p style="margin:8px 0;color:#94a3b8;"><strong>Tournament Bracket:</strong> <span style="color:#38BDF8;font-weight:bold;">${game}</span></p>
-                            <p style="margin:8px 0;color:#94a3b8;"><strong>Arena Time Window:</strong> <span style="color:#10B981;font-weight:bold;">${timeSlot}</span></p>
-                            <p style="margin:8px 0;color:#94a3b8;"><strong>Fee Status:</strong> <span style="color:#FBBF24;font-weight:bold;">Rs. ${amount} Verified</span></p>
+                            <p style="margin:8px 0;color:#94a3b8;"><strong>Arena Schedule:</strong> <span style="color:#10B981;font-weight:bold;">${timeSlot}</span></p>
+                            <p style="margin:8px 0;color:#94a3b8;"><strong>Fee Verified Context:</strong> <span style="color:#FBBF24;font-weight:bold;">Verified Registration Package</span></p>
                             <div style="background:#030712;border:2px dashed #10B981;text-align:center;padding:15px;border-radius:10px;margin-top:20px;">
                                 <span style="display:block;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Gate Check-In Token</span>
                                 <span style="font-size:22px;font-weight:bold;color:#10B981;letter-spacing:2px;">${ticketKey}</span>
@@ -82,7 +76,7 @@ module.exports.handler = async (event, context) => {
             return {
                 statusCode: 200,
                 headers,
-                body: `<div style="background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:50px;height:100vh;margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;"><h1 style="color:#10B981;font-size:32px;margin-bottom:10px;">✅ Verification Successful!</h1><p style="color:#94a3b8;font-size:16px;">The system checked the game profile rules and dispatched the exact number of paid ticket seats successfully.</p></div>`
+                body: `<div style="background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:50px;height:100vh;margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;"><h1 style="color:#10B981;font-size:32px;margin-bottom:10px;">✅ Verification Successful!</h1><p style="color:#94a3b8;font-size:16px;">The system successfully processed the order layout profile and issued the precise number of activated player passes.</p></div>`
             };
 
         } catch (err) {
