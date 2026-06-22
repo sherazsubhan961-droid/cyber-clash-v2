@@ -1,524 +1,364 @@
-<div class="neon-banner-container">
-    <div class="animated-neon-core">COMPETITOR PORTAL ACTIVE</div>
-</div>
-
-<style>
-.neon-banner-container {
-    background: #020617;
-    border: 2px solid #38BDF8;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 25px;
-}
-
-/* Creating an ongoing breathing pulse animation layer */
-.animated-neon-core {
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 3px;
-    color: #38BDF8;
-    text-transform: uppercase;
-    animation: portalPulse 1.8s ease-in-out infinite alternate;
-}
-
-@keyframes portalPulse {
-    0% {
-        color: #38BDF8;
-        text-shadow: 0 0 5px #38BDF8, 0 0 10px #38BDF8;
-        opacity: 0.7;
-    }
-    100% {
-        color: #F43F5E;
-        text-shadow: 0 0 15px #F43F5E, 0 0 25px #F43F5E;
-        opacity: 1;
-        transform: scale(1.02);
-    }
-}
-</style><div class="logo-wrapper">
-    <h1 class="cyber-logo" data-text="CYBER CLASH 2026">CYBER CLASH 2026</h1>
-</div>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
-
-.logo-wrapper {
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-}
-
-.cyber-logo {
-    font-family: 'Orbitron', sans-serif !important;
-    font-size: 52px !important;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 8px;
-    color: #fff;
-    position: relative;
-    margin: 0;
-    /* Continuous Pulse Animation */
-    animation: neonGlow 2.5s ease-in-out infinite alternate;
-}
-
-/* Glitch Copy Effect layers */
-.cyber-logo::before,
-.cyber-logo::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-}
-
-.cyber-logo::before {
-    left: 3px;
-    text-shadow: -2px 0 #38BDF8;
-    clip: rect(44px, 450px, 56px, 0);
-    animation: glitchEffect 3s infinite linear alternate-reverse;
-}
-
-.cyber-logo::after {
-    left: -3px;
-    text-shadow: -2px 0 #F43F5E, 0 2px #38BDF8;
-    clip: rect(85px, 450px, 140px, 0);
-    animation: glitchEffect 2.5s infinite linear alternate;
-}
-
-/* KEYFRAMES FOR ANIMATIONS */
-@keyframes neonGlow {
-    0% {
-        text-shadow: 0 0 10px rgba(56, 189, 248, 0.6),
-                     0 0 20px rgba(56, 189, 248, 0.4),
-                     0 0 40px rgba(56, 189, 248, 0.2);
-    }
-    100% {
-        text-shadow: 0 0 15px rgba(244, 63, 94, 0.9),
-                     0 0 30px rgba(244, 63, 94, 0.6),
-                     0 0 60px rgba(244, 63, 94, 0.3);
-        transform: scale(1.02);
-    }
-}
-
-@keyframes glitchEffect {
-    0% { clip: rect(31px, 9999px, 94px, 0); }
-    10% { clip: rect(112px, 9999px, 76px, 0); }
-    20% { clip: rect(85px, 9999px, 5px, 0); }
-    30% { clip: rect(27px, 9999px, 115px, 0); }
-    40% { clip: rect(73px, 9999px, 29px, 0); }
-    50% { clip: rect(118px, 9999px, 142px, 0); }
-    60% { clip: rect(44px, 9999px, 51px, 0); }
-    70% { clip: rect(12px, 9999px, 95px, 0); }
-    80% { clip: rect(132px, 9999px, 103px, 0); }
-    90% { clip: rect(56px, 9999px, 122px, 0); }
-    100% { clip: rect(99px, 9999px, 14px, 0); }
-}
-</style><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER CLASH 2026 | Championship Portal</title>
+    <title>CYBER CLASH 2026 | Arena Registration</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
-        :root {
-            --bg-dark: #030712;
-            --card-dark: rgba(17, 24, 39, 0.75);
-            --neon-blue: #38BDF8;
-            --neon-pink: #F43F5E;
-            --neon-green: #10B981;
-            --text-main: #F9FAFB;
-        }
-
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background: radial-gradient(circle at 50% 50%, #0b0f19 0%, var(--bg-dark) 100%);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
+            font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
-            position: relative;
+        }
+        .heading-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* FUNKY HIGH-SPEED NEON ANIMATED BACKGROUND */
+        .animated-bg {
+            background: linear-gradient(125deg, #090514, #0a0a28, #180325, #021724);
+            background-size: 400% 400%;
+            animation: gradientMove 14s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Animated Cyber Grid Matrix Background */
-        body::before {
-            content: "";
+        /* GLOWING MOVING PLASMA ORBS */
+        .plasma-orb {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridTravel 25s linear infinite;
-            z-index: -1;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.35;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            animation: floatOrb 10s ease-in-out infinite alternate;
         }
-        @keyframes gridTravel {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
+        .orb-pink {
+            width: 450px; height: 450px; background: #ec4899; top: -10%; left: -10%;
+        }
+        .orb-blue {
+            width: 500px; height: 500px; background: #06b6d4; bottom: -5%; right: -5%;
+            animation-delay: -3s;
+        }
+        .orb-purple {
+            width: 350px; height: 350px; background: #a855f7; top: 40%; left: 60%;
+            animation-delay: -6s;
+        }
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 40px) scale(1.15); }
         }
 
-        .container {
-            max-width: 950px;
-            margin: 0 auto;
+        /* PREMIUM CYBERPUNK FORM CARDS */
+        .cyber-panel {
+            background: rgba(10, 10, 26, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid #38bdf8;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.15), inset 0 0 15px rgba(56, 189, 248, 0.05);
             position: relative;
         }
-
-        .header-panel {
-            text-align: center;
-            padding: 40px 20px;
-            background: rgba(17, 24, 39, 0.5);
-            border: 2px solid var(--neon-blue);
-            border-radius: 16px;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
-            margin-bottom: 40px;
-            backdrop-filter: blur(12px);
+        .cyber-panel::before {
+            content: ''; position: absolute; top: -2px; left: -2px; width: 30px; height: 30px;
+            border-top: 4px solid #f43f5e; border-left: 4px solid #f43f5e; pointer-events: none;
         }
-        h1 {
-            font-size: 46px;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            color: #fff;
-            text-shadow: 0 0 12px var(--neon-blue), 0 0 25px var(--neon-blue);
+        .cyber-panel::after {
+            content: ''; position: absolute; bottom: -2px; right: -2px; width: 30px; height: 30px;
+            border-bottom: 4px solid #fbbf24; border-right: 4px solid #fbbf24; pointer-events: none;
         }
-        .venue-badge {
-            display: inline-block;
-            background: linear-gradient(90deg, var(--neon-pink), #e11d48);
-            padding: 8px 20px;
-            font-weight: 800;
-            font-size: 14px;
-            border-radius: 30px;
-            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
-            margin: 15px 0;
-            letter-spacing: 1.5px;
-        }
-
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-        .game-card {
-            background: var(--card-dark);
-            border: 1px solid #1f2937;
-            border-radius: 14px;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(8px);
-        }
-        .game-card:hover {
-            border-color: var(--neon-blue);
-            transform: translateY(-6px);
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
-        }
-        .game-card.active {
-            border-color: var(--neon-pink);
-            background: rgba(30, 27, 75, 0.5);
-            box-shadow: 0 0 25px rgba(244, 63, 94, 0.35);
-        }
-        .pool-price {
-            font-size: 32px;
-            font-weight: 800;
-            color: #FBBF24;
-            margin: 15px 0;
-        }
-
-        form {
-            background: rgba(17, 24, 39, 0.85);
-            padding: 40px;
-            border-radius: 16px;
-            border: 1px solid #374151;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            margin-bottom: 60px;
-            backdrop-filter: blur(16px);
-        }
-        .player-block {
-            background: rgba(3, 7, 18, 0.6);
-            border: 1px solid #1f2937;
-            border-left: 4px solid var(--neon-blue);
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-        }
-        .player-block h4 {
-            margin: 0 0 15px 0;
-            color: var(--neon-blue);
-            text-transform: uppercase;
-            font-size: 16px;
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #9CA3AF;
-            font-size: 14px;
-        }
-        input, select {
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 1px solid #4B5563;
-            background: #030712;
-            color: #fff;
-            font-size: 15px;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--neon-blue);
-        }
-
-        .banking-box {
-            background: #030712;
-            border-left: 4px solid var(--neon-green);
-            padding: 25px;
-            margin: 30px 0;
-            border-radius: 0 12px 12px 0;
-        }
-        .ledger-calc {
-            font-size: 22px;
-            color: var(--neon-green);
-            font-weight: 800;
-            margin-top: 15px;
-        }
-
-        button {
-            width: 100%;
-            background: linear-gradient(90deg, var(--neon-blue), #0284c7);
-            color: #030712;
-            border: none;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: 800;
-            border-radius: 8px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4);
+        
+        /* NEON TEXT GLOW EFFECTS */
+        .neon-text-blue { text-shadow: 0 0 12px rgba(56, 189, 248, 0.7); }
+        .neon-text-rose { text-shadow: 0 0 12px rgba(244, 63, 94, 0.7); }
+        .neon-border-focus:focus {
+            outline: none; border-color: #f43f5e; box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
         }
     </style>
 </head>
-<body>
+<body class="animated-bg text-gray-100 min-h-screen relative pb-16">
 
-<div class="container">
-    <div class="header-panel">
-        <h1>CYBER CLASH 2026</h1>
-        <div class="venue-badge">🏟️ VENUE: THE DYNASTY COMPLEX</div>
-        <p style="color: #6B7280; margin: 0; font-size: 15px;">Official Tournament Registration Arena</p>
+    <div class="plasma-orb orb-pink"></div>
+    <div class="plasma-orb orb-blue"></div>
+    <div class="plasma-orb orb-purple"></div>
+
+    <div class="max-w-5xl mx-auto px-4 pt-12 relative z-10">
+        
+        <header class="text-center mb-10">
+            <div class="inline-block bg-rose-500/10 border border-rose-500/30 px-4 py-1 rounded-full text-rose-400 heading-font text-xs tracking-[4px] uppercase mb-3 font-bold">
+                ⚡ LIVE BATTLE LOGISTICS INTEL
+            </div>
+            <h1 class="heading-font text-5xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-400 to-rose-500 uppercase">
+                CYBER CLASH 2026
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl tracking-wide max-w-xl mx-auto mt-2">
+                Co-Founded & Managed by <span class="text-amber-400 font-bold">K.M. Subhan Shiraz</span> & <span class="text-cyan-400 font-bold">Mian M. Taimur Usman</span>
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <main class="lg:col-span-7">
+                <form id="registrationForm" class="cyber-panel p-6 rounded-2xl space-y-6">
+                    <h2 class="heading-font text-2xl font-black text-cyan-400 uppercase tracking-wider border-b border-cyan-500/20 pb-2 neon-text-blue">
+                        🎮 SECURE REGISTRY NODE
+                    </h2>
+
+                    <div>
+                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Target Arena Game Category</label>
+                        <select id="gameSelect" onchange="adjustRosterInputs()" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-4 py-3 text-white font-semibold transition-all duration-300 neon-border-focus cursor-pointer">
+                            <option value="Tekken 8">Tekken 8 (1v1 Fighter Pro Bracket)</option>
+                            <option value="PUBG Mobile">PUBG Mobile (4v4 Complete Squad Matrix)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Preferred Arena Battle Time-Slot</label>
+                        <select id="timeSlot" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-4 py-3 text-white font-semibold transition-all duration-300 neon-border-focus cursor-pointer">
+                            <option value="11:00 AM - 02:00 PM">Morning Matrix: 11:00 AM - 02:00 PM</option>
+                            <option value="03:00 PM - 06:00 PM">Midday Mayhem: 03:00 PM - 06:00 PM</option>
+                            <option value="07:00 PM - 10:00 PM">Nightfall Clash: 07:00 PM - 10:00 PM</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 bg-slate-950/80 border border-slate-800 p-4 rounded-xl">
+                        <div>
+                            <span class="block text-xs text-gray-500 uppercase font-bold tracking-wider">Pass Capacity</span>
+                            <span id="displayQuantity" class="text-2xl font-black heading-font text-white">1 Seat</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-xs text-gray-500 uppercase font-bold tracking-wider">Required Wallet Deposit</span>
+                            <span id="displayAmount" class="text-2xl font-black heading-font text-amber-400">Rs. 500</span>
+                        </div>
+                    </div>
+
+                    <div id="combatantContainer" class="space-y-4">
+                        </div>
+
+                    <div class="bg-gradient-to-r from-purple-950/40 to-slate-950 border border-purple-500/30 p-4 rounded-xl space-y-2">
+                        <h4 class="heading-font font-black text-purple-400 uppercase text-sm tracking-wider">💳 OFFICIAL ESCROW DEPOSIT CHANNEL</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Send entry funds directly to the designated tournament coordinator mobile wallet line below:
+                        </p>
+                        <div class="flex items-center justify-between bg-black/60 px-3 py-2 rounded-lg border border-slate-800">
+                            <div>
+                                <span class="block text-[10px] text-gray-500 uppercase font-bold">Zindagi App / JazzCash Account</span>
+                                <span class="text-white font-black tracking-wider text-base">0323 4636 920</span>
+                            </div>
+                            <span class="bg-amber-500/10 border border-amber-500/40 text-amber-400 text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider">
+                                Khwaja M. Subhan
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-400 uppercase font-bold tracking-wider text-sm mb-2">Upload Transfer Voucher Proof (Image File Only)</label>
+                        <div class="relative bg-slate-950/90 border-2 border-dashed border-cyan-500/30 rounded-xl p-4 text-center group hover:border-cyan-400 transition-all duration-300">
+                            <input type="file" id="screenshotFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20" required />
+                            <div class="space-y-1">
+                                <span class="block text-cyan-400 font-bold text-sm tracking-wide uppercase group-hover:text-cyan-300 transition-colors">Select Payment Image</span>
+                                <span id="fileNameDisplay" class="block text-xs text-gray-500 italic">No image file staged</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 text-white font-black heading-font text-lg py-4 rounded-xl uppercase tracking-[3px] shadow-lg shadow-rose-600/20 active:scale-[0.99] transition-all duration-200 cursor-pointer">
+                        🚀 TRANSMIT APPLICATION FILE
+                    </button>
+                </form>
+            </main>
+
+            <aside class="lg:col-span-5 space-y-6">
+                
+                <section class="cyber-panel p-5 rounded-2xl border-rose-500/50 shadow-rose-500/5">
+                    <div class="cyber-panel::before" style="border-top-color:#06b6d4; border-left-color:#06b6d4;"></div>
+                    <h3 class="heading-font text-lg font-black text-rose-500 uppercase tracking-widest border-b border-rose-500/20 pb-2 flex items-center gap-2 neon-text-rose">
+                        ⚠️ MANDATORY ARENA LAW & RULES
+                    </h3>
+                    <ul class="mt-3 space-y-3 text-sm text-gray-300 leading-relaxed font-medium">
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-black mt-0.5">▪</span>
+                            <span><strong>Zero Tolerance Fighting:</strong> Absolutely no physical alterations or aggressive layout postures are tolerated inside the complex boundaries.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-black mt-0.5">▪</span>
+                            <span><strong>Abusive Vocabulary Block:</strong> The use of profanity, racial slurs, or toxic trash-talk targeted at competitors or administrators is strictly banned.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-rose-500 font-black mt-0.5">▪</span>
+                            <span><strong>Immediate Disqualification:</strong> If any combatant is logged violating these parameters, they will be **instantly disqualified** from their bracket matches and blacklisted from all future entries.</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="cyber-panel p-5 rounded-2xl border-amber-500/50 shadow-amber-500/5">
+                    <h3 class="heading-font text-lg font-black text-amber-400 uppercase tracking-widest border-b border-amber-500/20 pb-2">
+                        🛡️ GAME-SPECIFIC CATEGORY BRACKETS
+                    </h3>
+                    
+                    <div class="mt-4 space-y-4 divide-y divide-slate-800/60">
+                        <div class="pb-3">
+                            <h4 class="heading-font text-xs font-black text-cyan-400 uppercase tracking-wider mb-1">🎮 TEKKEN 8 LOGISTICS RULEBOOK:</h4>
+                            <ul class="text-xs text-gray-400 space-y-1.5 list-inside list-disc">
+                                <li>Run via an official <span class="text-white font-semibold">Double Elimination Tournament</span> format grid structure.</li>
+                                <li>Competitors are **fully permitted** to attach and configure their personal Custom Joysticks or Arcade Hitbox Controllers as per their individual gameplay mechanics optimization needs.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-3">
+                            <h4 class="heading-font text-xs font-black text-purple-400 uppercase tracking-wider mb-1">📱 PUBG MOBILE LOGISTICS RULEBOOK:</h4>
+                            <p class="text-xs text-gray-400 leading-relaxed">
+                                Matches deployment requires a <span class="text-white font-semibold">Complete 4-Man Squad Matrix</span> operation. All four custom participant endpoints must register in synchronization to form an authorized entry node block.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+            </aside>
+        </div>
     </div>
 
-    <div class="game-grid">
-        <div class="game-card" id="card-pubg" onclick="setupMatchContext('PUBG Mobile Squad', 1500, 'squad', '11:00 AM', this)">
-            <h3>PUBG MOBILE</h3>
-            <p style="color:#9CA3AF; margin:5px 0;">Squad Arena Entry</p>
-            <div class="pool-price">Rs. 1,500 <span style="font-size:12px; color:#6B7280;">/ head</span></div>
-            <small style="color: var(--neon-blue);">Full Squad (4 Players): Rs. 6,000<br/><b>Prize Pool: Rs. 30,000</b></small>
-        </div>
-        <div class="game-card" onclick="setupMatchContext('Tekken 8 Solo', 2000, 'solo', '02:30 PM', this)">
-            <h3>TEKKEN 8</h3>
-            <p style="color:#9CA3AF; margin:5px 0;">Solo Bracket Elimination</p>
-            <div class="pool-price">Rs. 2,000</div>
-            <small style="color: var(--neon-blue);">Fighter Pro Lounge Setup<br/><b>Prize Pool: Rs. 20,000</b></small>
-        </div>
-        <div class="game-card" onclick="setupMatchContext('EA FC FIFA Solo', 2000, 'solo', '05:00 PM', this)">
-            <h3>EA FC / FIFA 26</h3>
-            <p style="color:#9CA3AF; margin:5px 0;">Solo Bracket Elimination</p>
-            <div class="pool-price">Rs. 2,000</div>
-            <small style="color: var(--neon-blue);">Console Mainstage Roster<br/><b>Prize Pool: Rs. 20,000</b></small>
-        </div>
-    </div>
+    <script>
+        // Track the current file uploaded state securely
+        let structuredBase64Image = "";
 
-    <form id="grandRegForm" onsubmit="handleFormSubmission(event)">
-        <input type="hidden" id="selectedGame" required>
-        <input type="hidden" id="basePrice">
-        <input type="hidden" id="matchTime">
-        <input type="hidden" id="bracketType">
+        // Dynamically match user form values to payment scales
+        function adjustRosterInputs() {
+            const selectedGame = document.getElementById('gameSelect').value;
+            const container = document.getElementById('combatantContainer');
+            
+            let headcount = 1;
+            let netFeePaid = 500;
 
-        <div class="form-group">
-            <label for="ticketQuantity">Number of Registration Passes / Seats</label>
-            <select id="ticketQuantity" onchange="buildDynamicInputs(); calculateInvoice();">
-                <option value="1">1 Competitor Pass</option>
-                <option value="2">2 Competitor Passes</option>
-                <option value="3">3 Competitor Passes</option>
-                <option value="4">4 Competitor Passes (Full Squad)</option>
-            </select>
-        </div>
+            if (selectedGame === "PUBG Mobile") {
+                headcount = 4;
+                netFeePaid = 2000;
+            }
 
-        <div id="dynamicPlayersContainer"></div>
+            document.getElementById('displayQuantity').innerText = `${headcount} Seat${headcount > 1 ? 's' : ''}`;
+            document.getElementById('displayAmount').innerText = `Rs. ${netFeePaid.toLocaleString()}`;
 
-        <div class="banking-box">
-            <strong style="color: #FBBF24; font-size: 16px;">💸 WIRE ESCROW DISPATCH INFORMATION</strong>
-            <p style="margin: 8px 0; font-size: 14px; color: #D1D5DB;">Execute your direct app transfer matching your calculated balance parameters below:</p>
-            <ul style="margin:0; padding-left:20px; color:#9CA3AF; font-size:14px; line-height: 1.6;">
-                <li><strong>Banking Application:</strong> Zindagi App Account</li>
-                <li><strong>Target Transfer Route:</strong> <span style="color:var(--neon-blue); font-weight:bold;">0323 4636 920</span></li>
-                <li><strong>Holder Title:</strong> Cyber Clash Organizers</li>
-            </ul>
-            <div class="ledger-calc" id="invoiceDisplay">Total Balance Due: Rs. 0</div>
-        </div>
+            container.innerHTML = ""; // Clear active input loops cleanly
 
-        <div class="form-group">
-            <label for="receiptImage">Upload Bank Payment Transfer Screenshot</label>
-            <input type="file" id="receiptImage" accept="image/*" required>
-        </div>
+            for (let i = 0; i < headcount; i++) {
+                container.innerHTML += `
+                    <div class="bg-black/40 border border-slate-800 p-4 rounded-xl space-y-3">
+                        <span class="block heading-font text-xs font-black text-gray-400 uppercase tracking-wider">
+                            👤 Combatant Seat Target Node #${i + 1} ${i === 0 ? '(Squad Leader / Primary Contact)' : ''}
+                        </span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <input type="text" placeholder="Full Legal Name" class="competitor-name bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white neon-border-focus" required />
+                            <input type="email" placeholder="Email Address Endpoint" class="competitor-email bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white neon-border-focus" required />
+                            <input type="tel" placeholder="WhatsApp Number" class="competitor-phone bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white neon-border-focus" required />
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
-        <button type="submit">Verify Payment & Secure Tickets</button>
-    </form>
-</div>
+        // Safe file parser to ensure ONLY valid images pass through frontend gateways
+        document.getElementById('screenshotFile').addEventListener('change', function(e) {
+            const targetFile = e.target.files[0];
+            if (!targetFile) return;
 
-<script>
-    let rawReceiptBase64 = "";
+            if (!targetFile.type.startsWith('image/')) {
+                Swal.fire({ icon: 'error', title: 'File Blocked', text: 'You can only upload actual photo screenshot vouchers.', background: '#0f172a', color: '#fff' });
+                this.value = '';
+                document.getElementById('fileNameDisplay').innerText = "No image file staged";
+                structuredBase64Image = "";
+                return;
+            }
 
-    document.getElementById('receiptImage').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
+            document.getElementById('fileNameDisplay').innerText = targetFile.name;
+
             const reader = new FileReader();
-            reader.onloadend = () => { rawReceiptBase64 = reader.result; };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    function setupMatchContext(game, basePrice, bracket, time, cardElement) {
-        document.querySelectorAll('.game-card').forEach(card => card.classList.remove('active'));
-        cardElement.classList.add('active');
-
-        document.getElementById('selectedGame').value = game;
-        document.getElementById('basePrice').value = basePrice;
-        document.getElementById('matchTime').value = time;
-        document.getElementById('bracketType').value = bracket;
-
-        const qtyDropdown = document.getElementById('ticketQuantity');
-        qtyDropdown.value = (bracket === 'squad') ? "4" : "1";
-
-        buildDynamicInputs();
-        calculateInvoice();
-    }
-
-    // MULTI-PERSON FORM GENERATION INTERFACE GENERATOR
-    function buildDynamicInputs() {
-        const container = document.getElementById('dynamicPlayersContainer');
-        container.innerHTML = ""; 
-
-        const qty = parseInt(document.getElementById('ticketQuantity').value || 1);
-        
-        for (let i = 1; i <= qty; i++) {
-            const block = document.createElement('div');
-            block.className = 'player-block';
-            block.innerHTML = `
-                <h4>Competitor Seat #${i} Details</h4>
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" class="p-name" required placeholder="Competitor ${i} Name">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" class="p-email" required placeholder="competitor${i}@email.com">
-                    </div>
-                    <div class="form-group">
-                        <label>WhatsApp Number</label>
-                        <input type="tel" class="p-phone" required placeholder="03XXXXXXXXX">
-                    </div>
-                </div>
-            `;
-            container.appendChild(block);
-        }
-    }
-
-    function calculateInvoice() {
-        const base = parseFloat(document.getElementById('basePrice').value || 0);
-        const qty = parseInt(document.getElementById('ticketQuantity').value || 1);
-        const bracket = document.getElementById('bracketType').value;
-
-        let total = base * qty;
-        if(bracket === 'squad' && qty === 4) {
-            total = 6000; 
-        }
-
-        document.getElementById('invoiceDisplay').innerText = `Total Balance Due: Rs. ${total.toLocaleString()}`;
-    }
-
-    async function handleFormSubmission(e) {
-        e.preventDefault();
-        
-        const game = document.getElementById('selectedGame').value;
-        if(!game) {
-            Swal.fire({ title: 'Select Game', text: 'Please choose and highlight a tournament game option card above.', icon: 'warning', confirmButtonColor: '#38BDF8' });
-            return;
-        }
-
-        if(!rawReceiptBase64) {
-            Swal.fire({ title: 'Attach Receipt', text: 'Please attach your payment screenshot picture asset before uploading.', icon: 'warning', confirmButtonColor: '#F43F5E' });
-            return;
-        }
-
-        const names = Array.from(document.querySelectorAll('.p-name')).map(el => el.value);
-        const emails = Array.from(document.querySelectorAll('.p-email')).map(el => el.value);
-        const phones = Array.from(document.querySelectorAll('.p-phone')).map(el => el.value);
-
-        const qty = parseInt(document.getElementById('ticketQuantity').value);
-        const base = parseFloat(document.getElementById('basePrice').value);
-        let absoluteAmount = base * qty;
-        if(document.getElementById('bracketType').value === 'squad' && qty === 4) {
-            absoluteAmount = 6000;
-        }
-
-        const dataPayload = {
-            game,
-            quantity: qty,
-            amount: absoluteAmount,
-            timeSlot: document.getElementById('matchTime').value,
-            screenshot: rawReceiptBase64,
-            competitors: names.map((name, index) => ({
-                name,
-                email: emails[index],
-                phone: phones[index]
-            }))
-        };
-
-        Swal.fire({
-            title: 'Encrypting Registration Profiles...',
-            text: 'Bundling target databases, running multi-pass render layers.',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading() }
+            reader.onload = function(evt) {
+                structuredBase64Image = evt.target.result;
+            };
+            reader.readAsDataURL(targetFile);
         });
 
-        try {
-            const response = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataPayload)
-            });
-            const result = await response.json();
+        // intercept submit handlers to talk with Netlify Redirect endpoints
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-            if (response.ok) {
-                Swal.fire({ title: 'Roster Registered!', text: 'All entry nodes checked and secure. High-fidelity neon ticketing codes have been individual routed to all input email endpoints!', icon: 'success', confirmButtonColor: '#10B981' });
-                document.getElementById('grandRegForm').reset();
-                document.getElementById('dynamicPlayersContainer').innerHTML = "";
-                document.querySelectorAll('.game-card').forEach(card => card.classList.remove('active'));
-                rawReceiptBase64 = "";
-                document.getElementById('invoiceDisplay').innerText = "Total Balance Due: Rs. 0";
-            } else {
-                Swal.fire({ title: 'Pipeline Exception', text: result.message || 'Mailing framework error.', icon: 'error', confirmButtonColor: '#F43F5E' });
+            if (!structuredBase64Image) {
+                Swal.fire({ icon: 'warning', title: 'Missing Proof Asset', text: 'Please attach your payment screenshot confirmation file before hitting deploy.', background: '#0f172a', color: '#fff' });
+                return;
             }
-        } catch (err) {
-            Swal.fire({ title: 'Connection Issue', text: 'Could not connect with serverless node clusters.', icon: 'error', confirmButtonColor: '#F43F5E' });
-        }
-    }
-</script>
+
+            const game = document.getElementById('gameSelect').value;
+            const timeSlot = document.getElementById('timeSlot').value;
+            const quantity = game === "PUBG Mobile" ? 4 : 1;
+            const amount = game === "PUBG Mobile" ? 2000 : 500;
+
+            const nameElements = document.querySelectorAll('.competitor-name');
+            const emailElements = document.querySelectorAll('.competitor-email');
+            const phoneElements = document.querySelectorAll('.competitor-phone');
+
+            const competitors = [];
+            for (let i = 0; i < nameElements.length; i++) {
+                competitors.push({
+                    name: nameElements[i].value.trim(),
+                    email: emailElements[i].value.trim(),
+                    phone: phoneElements[i].value.trim()
+                });
+            }
+
+            Swal.fire({
+                title: 'Transmitting Registry Logs...',
+                text: 'Securing lines and uploading payload packets.',
+                background: '#0f172a',
+                color: '#fff',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                // Notice the URL is set to relative /api/register which Netlify maps using our redirects mapping rules flawlessly
+                const backendResponse = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ game, quantity, amount, timeSlot, screenshot: structuredBase64Image, competitors })
+                });
+
+                const structuralResult = await backendResponse.json();
+
+                if (structuralResult.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'APPLICATION ROUTED SECURELY',
+                        html: '<p style="color:#cbd5e1; font-size:14px;">Your registration entry data packet has been locked inside our approval staging queues. Your passes remain safely pending until Shiraz cross-checks your Zindagi wallet balance statement logs.</p>',
+                        background: '#0f172a',
+                        color: '#fff',
+                        confirmButtonColor: '#10b981'
+                    });
+                    document.getElementById('registrationForm').reset();
+                    document.getElementById('fileNameDisplay').innerText = "No image file staged";
+                    structuredBase64Image = "";
+                    adjustRosterInputs();
+                } else {
+                    throw new Error("Serverless gateway dropped execution parameters.");
+                }
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'GATEWAY DISCONNECT',
+                    text: 'Connection Error: Netlify edge routers could not synchronize with your backend functions. Double check that your files are published successfully inside your Netlify panel.',
+                    background: '#0f172a',
+                    color: '#fff',
+                    confirmButtonColor: '#f43f5e'
+                });
+            }
+        });
+
+        // Initialize registration card fields on load
+        window.onload = adjustRosterInputs;
+    </script>
 </body>
 </html>
