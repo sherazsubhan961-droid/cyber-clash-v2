@@ -1,21 +1,26 @@
 const nodemailer = require('nodemailer');
 
-export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+module.exports.handler = async (event, context) => {
+    // Enable Cross-Origin Resource Sharing (CORS) handshakes
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Content-Type': 'application/json'
+    };
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
+    // Handle browser preflight checks
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
     }
 
-    if (req.method !== 'POST') {
-        return res.status(405).json({ success: false, message: "Method not allowed" });
+    if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, headers, body: JSON.stringify({ success: false, message: "Method not allowed" }) };
     }
 
     try {
-        const { game, quantity, amount, timeSlot, screenshot, competitors } = req.body;
+        const body = JSON.parse(event.body);
+        const { game, quantity, amount, timeSlot, screenshot, competitors } = body;
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -29,20 +34,23 @@ export default async function handler(req, res) {
         const securePayload = { game, quantity, amount, timeSlot, competitors };
         const encryptedToken = Buffer.from(JSON.stringify(securePayload)).toString('base64');
 
-        const host = req.headers.host || 'cyber-clash-v2.netlify.app';
+        // Dynamically track your Netlify domain name
+        const host = event.headers.host || 'cyberclash6566.netlify.app';
         const currentDomain = `https://${host}`;
         const approveActionRoute = `${currentDomain}/api/approve?action=approve&token=${encryptedToken}`;
         const rejectActionRoute = `${currentDomain}/api/approve?action=reject`;
 
         let masterRosterHTMLRows = "";
-        for (let i = 0; i < competitors.length; i++) {
-            masterRosterHTMLRows += `
-                <tr style="border-bottom: 1px solid #1e293b;">
-                    <td style="padding: 10px; color: #ffffff;">Slot #${i + 1}: ${competitors[i].name}</td>
-                    <td style="padding: 10px; color: #38BDF8;">${competitors[i].email}</td>
-                    <td style="padding: 10px; color: #FBBF24;">${competitors[i].phone}</td>
-                </tr>
-            `;
+        if (competitors && Array.isArray(competitors)) {
+            for (let i = 0; i < competitors.length; i++) {
+                masterRosterHTMLRows += `
+                    <tr style="border-bottom: 1px solid #1e293b;">
+                        <td style="padding: 10px; color: #ffffff;">Slot #${i + 1}: ${competitors[i].name}</td>
+                        <td style="padding: 10px; color: #38BDF8;">${competitors[i].email}</td>
+                        <td style="padding: 10px; color: #FBBF24;">${competitors[i].phone}</td>
+                    </tr>
+                `;
+            }
         }
 
         const adminVerificationHTML = `
@@ -82,8 +90,16 @@ export default async function handler(req, res) {
             attachments: [{ filename: 'user_payment_voucher_proof.png', content: cleanBase64Data, encoding: 'base64' }]
         });
 
-        return res.status(200).json({ success: true });
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({ success: true })
+        };
     } catch (error) {
-        return res.status(500).json({ success: false, message: error.toString() });
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ success: false, error: error.toString() })
+        };
     }
-}
+};
